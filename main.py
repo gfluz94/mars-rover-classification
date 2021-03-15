@@ -1,3 +1,4 @@
+import argparse
 import pandas as pd
 import numpy as np
 
@@ -46,15 +47,23 @@ def save_final_output(test_generator, final_predictions, pred_to_label):
 
 
 if __name__=="__main__":
+    parser = argparse.ArgumentParser(description="Functionality that trains and executes classification model")
+    parser.add_argument('-e', '--epochs', type=int, default=30)
+    parser.add_argument('-b', '--batch_size', type=int, default=100)
+    parser.add_argument('-n', '--num_neurons', type=int, default=1024)
+    parser.add_argument('-l', '--learning_rate', type=int, default=0.0001)
+    args = pareser.parse_args()
+
     get_and_preprocess_data()
-    train_gen, val_gen, id_to_label = get_train_and_val_generators(TRAIN_FINAL_PATH, VAL_FINAL_PATH, batch_size=100)
-    model, model_checkpoint = build_inception_net(neurons_top_dense_layer=1024, learning_rate=0.0001)
+    train_gen, val_gen, id_to_label = get_train_and_val_generators(TRAIN_FINAL_PATH, VAL_FINAL_PATH, batch_size=args.batch_size)
+    model, model_checkpoint = build_inception_net(neurons_top_dense_layer=args.num_neurons,
+                                                  learning_rate=args.learning_rate)
 
     model = train(model=model,
                   train_generator=train_gen,
                   validation_generator=val_gen,
                   model_checkpoint=model_checkpoint,
-                  total_epochs=30,
+                  total_epochs=args.epochs,
                   fine_tuning=True)
 
     val_gen = get_prediction_generator(VAL_FINAL_PATH)
