@@ -52,7 +52,7 @@ if __name__=="__main__":
     parser.add_argument('-b', '--batch_size', type=int, default=100)
     parser.add_argument('-n', '--num_neurons', type=int, default=1024)
     parser.add_argument('-l', '--learning_rate', type=int, default=0.0001)
-    args = pareser.parse_args()
+    args = parser.parse_args()
 
     get_and_preprocess_data()
     train_gen, val_gen, id_to_label = get_train_and_val_generators(TRAIN_FINAL_PATH, VAL_FINAL_PATH, batch_size=args.batch_size)
