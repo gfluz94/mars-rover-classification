@@ -51,7 +51,7 @@ if __name__=="__main__":
     parser.add_argument('-e', '--epochs', type=int, default=30)
     parser.add_argument('-b', '--batch_size', type=int, default=100)
     parser.add_argument('-n', '--num_neurons', type=int, default=1024)
-    parser.add_argument('-l', '--learning_rate', type=int, default=0.0001)
+    parser.add_argument('-l', '--learning_rate', type=float, default=0.0001)
     args = parser.parse_args()
 
     get_and_preprocess_data()
