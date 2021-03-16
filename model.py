@@ -1,3 +1,5 @@
+import urllib
+
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import Model
 from tensorflow.keras.applications.inception_v3 import InceptionV3
