@@ -51,7 +51,7 @@ For the training and prediction pipelines, the following command must be execute
 
 
 ```python
-python main.py [--epochs INT] [--batch_size INT] [--num_neurons INT] [--learning_rate FLOAT]
+python main.py [--epochs INT] [--batch_size INT] [--num_neurons INT] [--learning_rate FLOAT] [--threshold FLOAT]
 ```
 
 

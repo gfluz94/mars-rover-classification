@@ -32,7 +32,7 @@ def train(model, train_generator, validation_generator, model_checkpoint, total_
     
     return model
 
-def save_final_output(test_generator, final_predictions, pred_to_label):
+def save_final_output(test_generator, final_predictions, pred_to_label, threshold):
     output = {
         "ImageID": [],
         "label": []
@@ -40,7 +40,7 @@ def save_final_output(test_generator, final_predictions, pred_to_label):
     for img, pred in zip(test_generator.filenames, final_predictions.reshape(-1)):
         img_id = img.split("/")[-1].split(".")[0]
         output["ImageID"].append(int(img_id))
-        output["label"].append(pred_to_label[1*(pred>0.5)])
+        output["label"].append(pred_to_label[1*(pred>threshold)])
     output = pd.DataFrame(output)
     output.sort_values(by="ImageID").to_csv("./output/submission.csv", index=False)
     print("Output file succesfully saved in `output/submission.csv`")
@@ -52,6 +52,7 @@ if __name__=="__main__":
     parser.add_argument('-b', '--batch_size', type=int, default=100)
     parser.add_argument('-n', '--num_neurons', type=int, default=1024)
     parser.add_argument('-l', '--learning_rate', type=float, default=0.0001)
+    parser.add_argument('-t', '--threshold', type=float, default=0.4)
     args = parser.parse_args()
 
     get_and_preprocess_data()
@@ -68,12 +69,12 @@ if __name__=="__main__":
 
     val_gen = get_prediction_generator(VAL_FINAL_PATH)
     y_proba = model.predict(val_gen)
-    y_pred = 1*(y_proba>0.5)
+    y_pred = 1*(y_proba>args.threshold)
     print(">> Evaluating model on validation set:\n")
     print(evaluate(val_gen.classes, y_pred, y_proba))
     binary_evaluation_plot(val_gen.classes, y_proba)
 
     test_gen = get_prediction_generator(TEST_FINAL_PATH)
     y_proba = model.predict(test_gen)
-    y_pred = 1*(y_proba>0.5)
-    save_final_output(test_gen, y_pred, id_to_label)
+    y_pred = 1*(y_proba>args.threshold)
+    save_final_output(test_gen, y_pred, id_to_label, args.threshold)
